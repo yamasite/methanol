@@ -3,15 +3,15 @@
 
 # Developed by Lutkin Wang
 # Check prototype in
-# <codeblock props="ios mac" outputclass="language-objectivec">- (void)receiveMetadata:(NSData * _Nonnull)data
-# fromUser:(NSInteger)uid atTimestamp:(NSTimeInterval)timestamp;
+# <codeblock props="windows" outputclass="language-cpp">
+# virtual int adjustAudioMixingPlayoutVolume(int volume) = 0;
 # </codeblock>
 
 import os
 import re
 
 # Code location
-code_location = "C:\\Users\\WL\\Documents\\rte_sdk\\interface\\objc"
+code_location = "C:\\Users\\WL\\Documents\\rte_sdk\\interface\\cpp"
 # DITA location
 # dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
 
@@ -41,7 +41,7 @@ def removeComments(string):
 
 
 def write_log(text):
-    with open("log_ios.txt", encoding='utf8', mode='a') as f:
+    with open("log_cpp.txt", encoding='utf8', mode='a') as f:
         f.write(text + "\n")
 
 
@@ -54,13 +54,14 @@ for file in os.scandir(dita_location):
             content = f.read()
             # Use substring methods to get the proto from DITA
             # Here, we assume that the DITA file contains a single codeblock for each programming language
-            after_codeblock_start_tag = re.split('<codeblock props="ios mac" outputclass="language-objectivec">',
+            after_codeblock_start_tag = re.split('<codeblock props="windows" outputclass="language-cpp">',
                                                  content)
             try:
                 before_codeblock_end_tag = re.split('</codeblock>', after_codeblock_start_tag[1])
                 proto_text = before_codeblock_end_tag[0]
             except IndexError:
                 proto_text = "Error: No prototype"
+
             print(proto_text)
             dita_proto_list.append(proto_text)
 
@@ -85,7 +86,7 @@ with open(decomment_code_location + "/" + "concatenated.h", encoding='utf8', mod
     content4 = content3.replace(" ", "")
     content5 = content4.replace("\n", "")
 
-    open("log_ios.txt", "w").close()
+    open("log_cpp.txt", "w").close()
 
     i = 1
 

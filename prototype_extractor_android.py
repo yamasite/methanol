@@ -13,7 +13,9 @@ import re
 # Code location
 code_location = "C:\\Users\\WL\\Documents\\rte_sdk\\proj.android\\src\\main\\java\\io"
 # DITA location
-dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+# dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+
+dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
 
 decomment_code_location = "C:\\Users\\WL\\Documents\\nocomment"
 
@@ -45,7 +47,7 @@ def write_log(text):
 
 # Handle the DITA files
 for file in os.scandir(dita_location):
-    if (file.path.endswith(".dita")) and not file.path.startswith(dita_location + "\enum_") and file.is_file():
+    if (file.path.endswith(".dita")) and not file.path.startswith(dita_location + "\enum_") and not file.path.startswith(dita_location + "\\rtc_") and file.is_file():
         print(file.path)
         dita_file_list.append(file.path)
         with open(file.path, encoding='utf8') as f:
@@ -54,9 +56,9 @@ for file in os.scandir(dita_location):
             after_codeblock_start_tag = re.split('<codeblock props="android" outputclass="language-java">', content)
             try:
                 before_codeblock_end_tag = re.split('</codeblock>', after_codeblock_start_tag[1])
+                proto_text = before_codeblock_end_tag[0]
             except IndexError:
                 proto_text = "Error: No prototype"
-            proto_text = before_codeblock_end_tag[0]
             print(proto_text)
 
             dita_proto_list.append(proto_text)
