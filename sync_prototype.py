@@ -3,7 +3,7 @@
 #
 # Developed by Lutkin Wang
 #
-# Story: Replace the prototype section
+# Story: Replace the prototype section so that manual copy & paste is no longer needed
 #
 # <section id="prototype">
 #         <p props="rtc-ng" outputclass="codeblock">
@@ -33,9 +33,11 @@ import xml.etree.ElementTree as ET
 import os
 from os import path
 
-cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+# cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+cn_dir = "D:\\github_lucas\\doc_source\\dita\\RTC\\API"
 
-en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+# en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+en_dir = "D:\\github_lucas\\doc_source\\en-US\\dita\\RTC\\API"
 
 cn_proto_section_obj = None
 en_proto_section_obj = None
@@ -50,7 +52,7 @@ for file_name in os.listdir(cn_dir):
             cn_dita_file_tree = ET.parse(cn_path)
             cn_dita_file_root = cn_dita_file_tree.getroot()
         except ET.ParseError as e:
-            print("Parse error for: " + file_name + "Code: " + str(e.code) + "Position: " + str(e.position))
+            print("Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
 
         en_path = path.join(en_dir, file_name)
 
@@ -59,6 +61,10 @@ for file_name in os.listdir(cn_dir):
             en_dita_file_root = en_dita_file_tree.getroot()
         except FileNotFoundError as e:
             print("File not found in en: " + file_name)
+
+        except ET.ParseError as e:
+            print("Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
+
 
         for section in cn_dita_file_root.iter("section"):
             if section.get("id") == "prototype":
@@ -72,4 +78,20 @@ for file_name in os.listdir(cn_dir):
                 refbody.insert(0, cn_proto_section_obj)
 
         en_dita_file_tree.write(en_dir + "//" + file_name)
-        # TODO The first two lines are removed. Need a solution.
+
+        header = """<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">\n"""
+
+        with open(en_dir + "//" + file_name, "r") as f:
+            text = header + f.read()
+
+        with open(en_dir + "//" + file_name, "w") as f:
+            f.write(text)
+
+
+
+
+
+
+
+
+
