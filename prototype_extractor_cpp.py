@@ -13,9 +13,9 @@ import re
 # Code location
 code_location = "C:\\Users\\WL\\Documents\\rte_sdk\\interface\\cpp"
 # DITA location
-# dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
 
-dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+# dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
 
 decomment_code_location = "C:\\Users\\WL\\Documents\\nocomment"
 
