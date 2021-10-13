@@ -33,6 +33,7 @@ import xml.etree.ElementTree as ET
 import os
 from os import path
 
+
 def main():
 
     cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
@@ -47,14 +48,17 @@ def main():
 
     # Copy cn protos to en
     for file_name in os.listdir(cn_dir):
-        if file_name.startswith("api_")  or file_name.startswith("class_"):
+
+        file_ready_for_copy = True
+
+        if file_name.startswith("api_") or file_name.startswith("class_"):
 
             try:
                 cn_path = path.join(cn_dir, file_name)
                 cn_dita_file_tree = ET.parse(cn_path)
                 cn_dita_file_root = cn_dita_file_tree.getroot()
             except ET.ParseError as e:
-                print("Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
+                print("[ERROR] Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
 
             en_path = path.join(en_dir, file_name)
 
@@ -62,32 +66,36 @@ def main():
                 en_dita_file_tree = ET.parse(en_path)
                 en_dita_file_root = en_dita_file_tree.getroot()
             except FileNotFoundError as e:
-                print("File not found in en: " + file_name)
+                print("[ERROR] File not found in en: " + file_name)
+                file_ready_for_copy = False
 
             except ET.ParseError as e:
-                print("Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
+                print("[ERROR] Parse error for: " + file_name + " Code: " + str(e.code) + " Position: " + str(e.position))
+                file_ready_for_copy = False
 
+            if file_ready_for_copy:
 
-            for section in cn_dita_file_root.iter("section"):
-                if section.get("id") == "prototype":
-                    cn_proto_section_obj = section
+                for section in cn_dita_file_root.iter("section"):
+                    if section.get("id") == "prototype":
+                        cn_proto_section_obj = section
 
-            refbody = en_dita_file_root.find("./refbody")
+                refbody = en_dita_file_root.find("./refbody")
 
-            for section in en_dita_file_root.iter("section"):
-                if section.get("id") == "prototype":
-                    refbody.remove(section)
-                    refbody.insert(0, cn_proto_section_obj)
+                for section in en_dita_file_root.iter("section"):
+                    if section.get("id") == "prototype":
+                        refbody.remove(section)
+                        refbody.insert(0, cn_proto_section_obj)
 
-            en_dita_file_tree.write(en_dir + "//" + file_name)
+                en_dita_file_tree.write(en_dir + "//" + file_name)
 
-            header = """<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">\n"""
+                header = """<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">\n"""
 
-            with open(en_dir + "//" + file_name, "r") as f:
-                text = header + f.read()
+                with open(en_dir + "//" + file_name, "r") as f:
+                    text = header + f.read()
 
-            with open(en_dir + "//" + file_name, "w") as f:
-                f.write(text)
+                with open(en_dir + "//" + file_name, "w") as f:
+                    f.write(text)
+
 
 if __name__ == '__main__':
     main()
