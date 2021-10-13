@@ -35,11 +35,11 @@ from os import path
 
 def main():
 
-    # cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
-    cn_dir = "D:\\github_lucas\\doc_source\\dita\\RTC\\API"
+    cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+    # cn_dir = "D:\\github_lucas\\doc_source\\dita\\RTC\\API"
 
-    # en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
-    en_dir = "D:\\github_lucas\\doc_source\\en-US\\dita\\RTC\\API"
+    en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+    # en_dir = "D:\\github_lucas\\doc_source\\en-US\\dita\\RTC\\API"
 
     cn_proto_section_obj = None
     en_proto_section_obj = None
