@@ -10,6 +10,7 @@
 import os
 import re
 
+log_name = "log_csharp.txt"
 
 def removeComments(string):
     string = re.sub(re.compile("/\*.*?\*/", re.DOTALL), "",
@@ -20,9 +21,14 @@ def removeComments(string):
 
 
 def write_log(text):
-    with open("log_cpp.txt", encoding='utf8', mode='a') as f:
+    with open(log_name, encoding='utf8', mode='a') as f:
         f.write(text + "\n")
 
+
+def read_ditamap(filename):
+    with open(filename, encoding='utf8', mode='r') as f:
+        text = f.read()
+    return text
 
 def main():
 
@@ -32,6 +38,9 @@ def main():
     dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
 
     # dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+
+    # DITA map location
+    dita_map_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\config\\keys-rtc-api-unity.ditamap"
 
     decomment_code_location = "C:\\Users\\WL\\Documents\\nocomment"
 
@@ -47,9 +56,11 @@ def main():
     # A list of proto files
     code_proto_list = []
 
+    ditamap_content = read_ditamap(dita_map_location)
+
     # Handle the DITA files
     for file in os.scandir(dita_location):
-        if (file.path.endswith(".dita")) and not file.path.startswith(dita_location + "\enum_") and not file.path.startswith(dita_location + "\\rtc_") and file.is_file():
+        if (file.path.endswith(".dita")) and not file.path.startswith(dita_location + "\enum_") and not file.path.startswith(dita_location + "\\rtc_") and file.is_file() and os.path.basename(file) in ditamap_content:
             print(file.path)
             dita_file_list.append(file.path)
             with open(file.path, encoding='utf8') as f:
@@ -88,9 +99,11 @@ def main():
         content4 = content3.replace(" ", "")
         content5 = content4.replace("\n", "")
 
-        open("log_csharp.txt", "w").close()
+        open(log_name, "w").close()
 
         i = 1
+
+        write_log("The DITAMAP used is " + dita_map_location + "\n")
 
         for file, code in dictionary.items():
             code1 = code.replace("&amp;", "&")

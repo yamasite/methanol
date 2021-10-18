@@ -58,4 +58,5 @@ def main():
                 print(proto_text)
                 dita_proto_list.append(proto_text)
 
+    # Take the CPP prototypes: [filename, proto]
     dictionary = dict(zip(dita_file_list, dita_proto_list))
