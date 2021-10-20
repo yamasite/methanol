@@ -36,11 +36,15 @@ from os import path
 
 def main():
 
-    cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+    # cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
     # cn_dir = "D:\\github_lucas\\doc_source\\dita\\RTC\\API"
+    cn_dir = "C:\\Users\\WL\\Documents\\GitHub\\test\\master\\doc_source\\dita\\RTC\\API"
 
-    en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+    # en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
     # en_dir = "D:\\github_lucas\\doc_source\\en-US\\dita\\RTC\\API"
+    en_dir = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+
+
 
     cn_proto_section_obj = None
     en_proto_section_obj = None
@@ -86,14 +90,14 @@ def main():
                         refbody.remove(section)
                         refbody.insert(0, cn_proto_section_obj)
 
-                en_dita_file_tree.write(en_dir + "//" + file_name)
+                en_dita_file_tree.write(en_dir + "//" + file_name, encoding='utf-8')
 
                 header = """<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE reference PUBLIC "-//OASIS//DTD DITA Reference//EN" "reference.dtd">\n"""
 
-                with open(en_dir + "//" + file_name, "r") as f:
+                with open(en_dir + "//" + file_name, "r", encoding='utf-8') as f:
                     text = header + f.read()
 
-                with open(en_dir + "//" + file_name, "w") as f:
+                with open(en_dir + "//" + file_name, "w", encoding='utf-8') as f:
                     f.write(text)
 
 
