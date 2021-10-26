@@ -75,6 +75,10 @@ def main():
                 except IndexError:
                     proto_text = "Error: No prototype"
 
+                proto_text = proto_text.replace("&amp;", "&")
+                proto_text = proto_text.replace("&lt;", "<")
+                proto_text = proto_text.replace("&gt;", ">")
+
                 print(proto_text)
                 dita_proto_list.append(proto_text)
 

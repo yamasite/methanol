@@ -36,9 +36,9 @@ def main():
     # Code location
     code_location = "C:\\Users\\WL\\Documents\\rte_sdk\\proj.android\\src\\main\\java\\io"
     # DITA location
-    # dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
+    dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\API"
 
-    dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
+    # dita_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\en-US\\dita\\RTC\\API"
 
     # DITA map location
     dita_map_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\config\\keys-rtc-ng-api-java.ditamap."
@@ -76,6 +76,11 @@ def main():
                     proto_text = before_codeblock_end_tag[0]
                 except IndexError:
                     proto_text = "Error: No prototype"
+
+                proto_text = proto_text.replace("&amp;", "&")
+                proto_text = proto_text.replace("&lt;", "<")
+                proto_text = proto_text.replace("&gt;", ">")
+
                 print(proto_text)
 
                 dita_proto_list.append(proto_text)
