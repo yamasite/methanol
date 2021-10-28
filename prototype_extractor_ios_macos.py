@@ -128,6 +128,11 @@ def main():
                 write_log("-------------------------------------------------------------------------------")
                 write_log("\n")
 
+    # Clean folder
+    for root, dirs, files in os.walk(decomment_code_location):
+        for file in files:
+            os.remove(os.path.join(root, file))
+
 
 if __name__ == '__main__':
     main()
