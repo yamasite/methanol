@@ -24,7 +24,7 @@ def read_ditamap(filename):
     return text
 
 
-def extract_dart_proto(cpp_code, content):
+def extract_rn_proto(cpp_code, content):
     #
     #  C++ code: virtual int stopRecordingDeviceTest() = 0;
     #  C++ core: stopRecordingDeviceTest
@@ -53,9 +53,27 @@ def extract_dart_proto(cpp_code, content):
 
         print("The matched C++ proto " + text)
         # Avoid Catastrophic Backtracking: https://www.regular-expressions.info/catastrophic.html
-        dart_proto_re = r'[A-Za-z]{1,100}[<]{0,1}[A-Za-z_]{0,100}[\?]{0,1}[>]{0,1}' + re.escape(text) + r'[0-9\s]{0,1}\([0-9A-Za-z_\s\n\?,\[\]]{0,100}\);{0,1}'
-        print(dart_proto_re)
-        result = re.findall(dart_proto_re, content)
+        # abstract playEffect(
+        #     soundId: number,
+        #     filePath: string,
+        #     loopCount: number,
+        #     pitch: number,
+        #     pan: number,
+        #     gain: number,
+        #     publish: boolean
+        #   ): Promise<number>;
+        #
+        # abstract preloadEffect(soundId: number, filePath: string): Promise<number>;
+        #
+        # onAudioPublishStateChanged?(
+        #     channel: string,
+        #     oldState: STREAM_PUBLISH_STATE,
+        #     newState: STREAM_PUBLISH_STATE,
+        #     elapseSinceLastState: number
+        #   ): void;
+        rn_proto_re = r'[A-Za-z]{1,10}[\s]{0,1}[\?]{0,1}' + re.escape(text) + r'[0-9\s]{0,1}\([A-Za-z_\s\n\?,\[\]\<\>:\)]{0,200};'
+        print(rn_proto_re)
+        result = re.findall(rn_proto_re, content)
 
         for code in result:
             print(code)
@@ -102,7 +120,7 @@ def extract_cpp_struct_dart_class(cpp_code, content):
         # A greedy quantifier always attempts to repeat the sub-pattern as many times as possible before exploring shorter matches by backtracking.
         # A lazy (also called non-greedy or reluctant) quantifier always attempts to repeat the sub-pattern as few times as possible, before exploring longer matches by expansion.
         # Here we use lazy ones
-        dart_proto_re = r'(class|mixin|abstract class)\s{0,10}' + re.escape(
+        dart_proto_re = r'(export interface|export class|export abstract class)\s{0,10}' + re.escape(
             text) + r'\s{0,10}\{\s{0,10}[A-Za-z_0-9\s\n\?\[\]\.,;\{\}\(\)<>=$@:]{0,2000}?(?<!\s\s)\}(?!\))'
         print(dart_proto_re)
         result = re.search(dart_proto_re, content)
@@ -129,7 +147,7 @@ def extract_cpp_enum_dart_class(cpp_code, content):
 def main():
 
     # Code location
-    code_location = "C:\\Users\\WL\\Documents\\GitHub\\agora_rtc_flutter_ng\\agora_rtc_flutter\\lib\\src"
+    code_location = "C:\\Users\\WL\\Documents\\GitHub\\agora-rtc-react-native\\src"
     # code_location = "D:\\github_lucas\\agora_rtc_flutter\\agora_rtc_flutter\\lib\\src"
 
     # DITA location
@@ -137,7 +155,7 @@ def main():
     # dita_location = "D:\\github_lucas\\doc_source\\dita\\RTC\\API"
 
     # DITA map location
-    dita_map_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\config\\keys-rtc-ng-api-flutter.ditamap"
+    dita_map_location = "C:\\Users\\WL\\Documents\\GitHub\\doc_source\\dita\\RTC\\config\\keys-rtc-ng-api-rn.ditamap"
     # dita_map_location = "D:\\github_lucas\\doc_source\\dita\\RTC\\config\\keys-rtc-ng-api-flutter.ditamap"
 
     decomment_code_location = "C:\\Users\\WL\\Documents\\nocomment"
@@ -202,15 +220,15 @@ def main():
     # Decomment all dart files
     for root, dirs, files in os.walk(code_location):
         for file in files:
-            if file.endswith(".dart") and not file.endswith("_impl.dart"):
+            if file.endswith(".ts") and not file.endswith("_impl.ts"):
                 with open(os.path.join(root, file), encoding='utf8', mode='r') as f:
                     print("Removing comments...")
                     text = removeComments(f.read())
-                    with open(decomment_code_location + "//" + "concatenated.dart", encoding='utf8', mode='a') as f1:
+                    with open(decomment_code_location + "//" + "concatenated.ts", encoding='utf8', mode='a') as f1:
                         print("Writing to concatenated file...")
                         f1.write(text)
 
-    with open(decomment_code_location + "//" + "concatenated.dart", encoding='utf8', mode='r') as f:
+    with open(decomment_code_location + "//" + "concatenated.ts", encoding='utf8', mode='r') as f:
         # Reading concatenated file ...
         print("Reading concatenated file...")
         content = f.read()
@@ -218,7 +236,7 @@ def main():
             name = os.path.basename(file)
             print(name)
             if name.startswith("api_"):
-                dart_protos = extract_dart_proto(code, content)
+                dart_protos = extract_rn_proto(code, content)
                 print(dart_protos)
 
                 if len(dart_protos) == 1:
@@ -233,12 +251,12 @@ def main():
                         if "2(" not in dart_proro and "3(" not in dart_proro and file.endswith("1.dita"):
                             dart_file_list.append(file)
                             dart_proto_list.append(dart_proro)
-                        elif dart_proro == "Future<void> enableDualStreamMode(bool enabled);":
-                            dart_file_list.append(file)
-                            dart_proto_list.append(dart_proro)
-                        elif dart_proro == "Future<int?> createDataStream(bool reliable, bool ordered);":
-                            dart_file_list.append(file)
-                            dart_proto_list.append(dart_proro)
+                        # elif dart_proro == "Future<void> enableDualStreamMode(bool enabled);":
+                        #     dart_file_list.append(file)
+                        #     dart_proto_list.append(dart_proro)
+                        # elif dart_proro == "Future<int?> createDataStream(bool reliable, bool ordered);":
+                        #     dart_file_list.append(file)
+                        #     dart_proto_list.append(dart_proro)
                         elif "2(" in dart_proro and file.endswith("2.dita"):
                             dart_file_list.append(file)
                             dart_proto_list.append(dart_proro)
@@ -274,7 +292,7 @@ def main():
                 print(e)
 
             for child in root.iter('*'):
-                if child.get("props") == "flutter" and child.tag == "codeblock":
+                if child.get("props") == "rn" and child.tag == "codeblock":
                     if proto != "There are no corresponding names available":
                         child.text = proto
 
